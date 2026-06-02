@@ -91,16 +91,21 @@
 }
 
 /* ============================================================
-   Transitions
-   ============================================================ */
-body,
-body * {
-	transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* ============================================================
    Base
    ============================================================ */
+html {
+	overflow-x: hidden;
+	-webkit-text-size-adjust: 100%;
+	-moz-text-size-adjust: 100%;
+	text-size-adjust: 100%;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
 body {
 	font-family: 'Inter', var(--font-atkinson), system-ui, -apple-system, sans-serif;
 	margin: 0;
@@ -114,6 +119,8 @@ body {
 	line-height: 1.8;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+	overflow-x: hidden;
+	-webkit-tap-highlight-color: transparent;
 }
 
 main {
@@ -216,9 +223,11 @@ table tr:nth-child(even) {
 	-webkit-overflow-scrolling: touch;
 	margin: 1.5em 0;
 	border-radius: 8px;
+	max-width: 100%;
 }
 .table-wrapper table {
 	margin: 0;
+	min-width: 500px;
 }
 
 /* ============================================================
@@ -240,20 +249,24 @@ code {
 	border-radius: 4px;
 	font-size: 0.85em;
 	font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+	word-break: break-word;
 }
 pre {
 	padding: 1.5em;
 	border-radius: 8px;
 	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
 	background: var(--pre-bg);
 	color: var(--pre-text);
 	position: relative;
 	border: 1px solid var(--border);
-	font-size: 0.88em;
+	font-size: 0.85em;
 	line-height: 1.65;
+	max-width: 100%;
 }
 pre > code {
 	all: unset;
+	word-break: normal;
 }
 
 /* Copy button */
@@ -315,16 +328,72 @@ hr {
    ============================================================ */
 [data-theme="dark"] .prose img[src$=".svg"] {
 	background: #ffffff;
-	padding: 1rem;
+	padding: 0.75rem;
 	border-radius: 8px;
 }
 
 /* ============================================================
-   Responsive
+   Theme transitions (scoped to key properties, not all elements)
+   ============================================================ */
+body,
+main,
+header,
+footer,
+.post-card,
+.toc-sidebar,
+.share-mobile,
+blockquote,
+pre,
+table,
+table th,
+table td,
+hr {
+	transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* ============================================================
+   Responsive – tablet
    ============================================================ */
 @media (max-width: 860px) {
 	body { font-size: 16px; }
-	main { padding: 1em; }
+	main { padding: 1.5em 1em; }
+	h1 { font-size: 1.75em; }
+	h2 { font-size: 1.4em; }
+	h3 { font-size: 1.2em; }
+	pre { padding: 1em; font-size: 0.82em; }
+	blockquote { padding: 0.5em 1em; font-size: 0.95em; }
+}
+
+/* ============================================================
+   Responsive – phone (up to 480px)
+   ============================================================ */
+@media (max-width: 480px) {
+	body { font-size: 15px; }
+	main { padding: 1em 0.75em; }
+	h1 { font-size: 1.5em; }
+	h2 { font-size: 1.25em; padding-bottom: 0.25em; }
+	h3 { font-size: 1.1em; }
+	pre { padding: 0.75em; font-size: 0.8em; border-radius: 6px; }
+	table { font-size: 0.82em; }
+	table th, table td { padding: 0.5em 0.65em; }
+	blockquote { margin: 1em 0; padding: 0.5em 0.75em; font-size: 0.9em; }
+	ul, ol { padding-left: 1.2em; }
+
+	/* Show copy button always on touch */
+	.code-copy-btn { opacity: 0.7; }
+}
+
+/* ============================================================
+   Responsive – small phone (up to 360px, e.g. iPhone SE)
+   ============================================================ */
+@media (max-width: 360px) {
+	body { font-size: 14px; }
+	main { padding: 0.75em 0.5em; }
+	h1 { font-size: 1.35em; }
+	h2 { font-size: 1.15em; }
+	pre { font-size: 0.75em; }
+	table { font-size: 0.78em; }
+	table th, table td { padding: 0.4em 0.5em; }
 }
 
 /* ============================================================

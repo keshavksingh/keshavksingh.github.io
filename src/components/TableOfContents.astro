@@ -70,7 +70,7 @@ const show = filtered.length >= 3;
 	}
 	.toc-nav a {
 		display: block;
-		padding: 0.35em 0.75em;
+		padding: 0.45em 0.75em;
 		font-size: 0.78rem;
 		color: var(--text-muted);
 		text-decoration: none;
@@ -112,7 +112,7 @@ const show = filtered.length >= 3;
 	@media (max-width: 1099px) {
 		.toc-sidebar {
 			display: block;
-			margin-bottom: 2em;
+			margin-bottom: 1.5em;
 			border: 1px solid var(--border);
 			border-radius: 8px;
 			background: var(--surface-1);
@@ -128,7 +128,8 @@ const show = filtered.length >= 3;
 			align-items: center;
 			gap: 0.5em;
 			width: 100%;
-			padding: 0.75em 1em;
+			padding: 0.85em 1em;
+			min-height: 48px;
 			border: none;
 			background: none;
 			color: var(--text-body);
@@ -145,6 +146,12 @@ const show = filtered.length >= 3;
 		}
 		.toc-nav.open {
 			display: block;
+		}
+		.toc-nav a {
+			padding: 0.55em 0.75em;
+			min-height: 44px;
+			display: flex;
+			align-items: center;
 		}
 		.toc-title {
 			display: none;
