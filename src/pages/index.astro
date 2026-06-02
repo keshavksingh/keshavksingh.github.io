@@ -1,0 +1,108 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import Header from '../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<style>
+			.hero {
+				padding: 3em 0 2em;
+				text-align: center;
+			}
+			.hero h1 {
+				font-size: 2.5em;
+				margin: 0 0 0.25em;
+				border: none;
+			}
+			.hero p {
+				font-size: 1.15em;
+				color: rgb(var(--gray));
+				max-width: 600px;
+				margin: 0 auto;
+			}
+			.posts-section h2 {
+				font-size: 1.5em;
+				margin-bottom: 1em;
+			}
+			ul {
+				list-style-type: none;
+				margin: 0;
+				padding: 0;
+			}
+			ul li {
+				margin-bottom: 1.5em;
+				padding-bottom: 1.5em;
+				border-bottom: 1px solid rgb(var(--gray-light));
+			}
+			ul li:last-child {
+				border-bottom: none;
+			}
+			ul li a {
+				text-decoration: none;
+				display: block;
+			}
+			ul li a:hover .title {
+				color: var(--accent);
+			}
+			.title {
+				font-size: 1.25em;
+				font-weight: 700;
+				color: rgb(var(--black));
+				margin: 0 0 0.25em;
+				transition: color 0.2s;
+			}
+			.date {
+				color: rgb(var(--gray));
+				font-size: 0.875em;
+				margin: 0;
+			}
+			.description {
+				color: rgb(var(--gray-dark));
+				margin: 0.5em 0 0;
+				font-size: 0.95em;
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<div class="hero">
+				<h1>Keshav Singh</h1>
+				<p>Engineering leadership, enterprise architecture, and AI governance.</p>
+			</div>
+			<section class="posts-section">
+				<h2>Recent Posts</h2>
+				<ul>
+					{
+						posts.map((post) => (
+							<li>
+								<a href={`/blog/${post.id}/`}>
+									<h3 class="title">{post.data.title}</h3>
+									<p class="date">
+										<FormattedDate date={post.data.pubDate} />
+									</p>
+									{post.data.description && (
+										<p class="description">{post.data.description}</p>
+									)}
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>

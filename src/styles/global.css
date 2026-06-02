@@ -1,0 +1,160 @@
+:root {
+	--accent: #3b82f6;
+	--accent-dark: #1d4ed8;
+	--black: 15, 23, 42;
+	--gray: 100, 116, 139;
+	--gray-light: 226, 232, 240;
+	--gray-dark: 30, 41, 59;
+	--gray-gradient: rgba(var(--gray-light), 50%), #fff;
+	--box-shadow:
+		0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%),
+		0 16px 32px rgba(var(--gray), 33%);
+}
+body {
+	font-family: var(--font-atkinson);
+	margin: 0;
+	padding: 0;
+	text-align: left;
+	background: #fff;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	color: rgb(var(--gray-dark));
+	font-size: 18px;
+	line-height: 1.75;
+}
+main {
+	width: 860px;
+	max-width: calc(100% - 2em);
+	margin: auto;
+	padding: 3em 1em;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin: 1.5em 0 0.5rem 0;
+	color: rgb(var(--black));
+	line-height: 1.3;
+}
+h1 {
+	font-size: 2.5em;
+}
+h2 {
+	font-size: 1.875em;
+	padding-bottom: 0.3em;
+	border-bottom: 1px solid rgb(var(--gray-light));
+}
+h3 {
+	font-size: 1.5em;
+}
+h4 {
+	font-size: 1.25em;
+}
+h5 {
+	font-size: 1.1em;
+}
+strong,
+b {
+	font-weight: 700;
+}
+a {
+	color: var(--accent-dark);
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+a:hover {
+	color: var(--accent);
+}
+p {
+	margin-bottom: 1em;
+}
+.prose p {
+	margin-bottom: 1.5em;
+}
+textarea {
+	width: 100%;
+	font-size: 16px;
+}
+input {
+	font-size: 16px;
+}
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 1.5em 0;
+	font-size: 0.9em;
+}
+table th {
+	background: rgb(var(--gray-dark));
+	color: #fff;
+	font-weight: 600;
+	text-align: left;
+	padding: 0.75em 1em;
+}
+table td {
+	padding: 0.65em 1em;
+	border-bottom: 1px solid rgb(var(--gray-light));
+}
+table tr:nth-child(even) {
+	background: rgba(var(--gray-light), 0.3);
+}
+img {
+	max-width: 100%;
+	height: auto;
+	border-radius: 4px;
+}
+code {
+	padding: 2px 6px;
+	background-color: rgb(var(--gray-light));
+	border-radius: 3px;
+	font-size: 0.875em;
+}
+pre {
+	padding: 1.5em;
+	border-radius: 6px;
+	overflow-x: auto;
+}
+pre > code {
+	all: unset;
+}
+blockquote {
+	border-left: 4px solid var(--accent);
+	padding: 0.5em 0 0.5em 1.25em;
+	margin: 1.5em 0;
+	font-size: 1.1em;
+	color: rgb(var(--gray));
+	background: rgba(var(--gray-light), 0.25);
+	border-radius: 0 4px 4px 0;
+}
+blockquote p {
+	margin: 0.5em 0;
+}
+hr {
+	border: none;
+	border-top: 1px solid rgb(var(--gray-light));
+	margin: 2.5em 0;
+}
+@media (max-width: 860px) {
+	body {
+		font-size: 16px;
+	}
+	main {
+		padding: 1em;
+	}
+}
+
+.sr-only {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	position: absolute !important;
+	height: 1px;
+	width: 1px;
+	overflow: hidden;
+	clip: rect(1px 1px 1px 1px);
+	clip: rect(1px, 1px, 1px, 1px);
+	clip-path: inset(50%);
+	white-space: nowrap;
+}
