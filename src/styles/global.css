@@ -94,7 +94,8 @@
    Base
    ============================================================ */
 html {
-	overflow-x: hidden;
+	overflow-x: clip;
+	max-width: 100vw;
 	-webkit-text-size-adjust: 100%;
 	-moz-text-size-adjust: 100%;
 	text-size-adjust: 100%;
@@ -119,7 +120,8 @@ body {
 	line-height: 1.8;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	overflow-x: hidden;
+	overflow-x: clip;
+	max-width: 100vw;
 	-webkit-tap-highlight-color: transparent;
 }
 
@@ -191,6 +193,7 @@ input { font-size: 16px; }
    ============================================================ */
 table {
 	width: 100%;
+	max-width: 100%;
 	border-collapse: separate;
 	border-spacing: 0;
 	margin: 1.5em 0;
