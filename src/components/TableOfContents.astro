@@ -1,0 +1,206 @@
+---
+interface Heading {
+	depth: number;
+	slug: string;
+	text: string;
+}
+
+interface Props {
+	headings: Heading[];
+}
+
+const { headings } = Astro.props;
+const filtered = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const show = filtered.length >= 3;
+---
+
+{show && (
+	<aside class="toc-sidebar" id="toc-sidebar">
+		<div class="toc-mobile-toggle">
+			<button id="toc-toggle" aria-label="Toggle table of contents">
+				<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<line x1="3" y1="6" x2="21" y2="6"></line>
+					<line x1="3" y1="12" x2="15" y2="12"></line>
+					<line x1="3" y1="18" x2="9" y2="18"></line>
+				</svg>
+				<span>Table of Contents</span>
+			</button>
+		</div>
+		<nav class="toc-nav" id="toc-nav">
+			<h4 class="toc-title">Table of contents</h4>
+			<ul>
+				{filtered.map((h) => (
+					<li class={h.depth === 3 ? 'toc-h3' : ''}>
+						<a href={`#${h.slug}`} data-slug={h.slug}>{h.text}</a>
+					</li>
+				))}
+			</ul>
+		</nav>
+	</aside>
+)}
+
+<style>
+	.toc-sidebar {
+		display: none;
+	}
+	.toc-mobile-toggle {
+		display: none;
+	}
+	.toc-title {
+		font-size: 0.7rem;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		color: var(--text-muted);
+		margin: 0 0 1rem 0;
+		padding: 0 0 0.5rem 0;
+		border: none;
+		border-bottom: 1px solid var(--border);
+		font-weight: 600;
+	}
+	.toc-nav ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	.toc-nav li {
+		margin: 0;
+	}
+	.toc-nav li.toc-h3 {
+		padding-left: 0.9em;
+	}
+	.toc-nav a {
+		display: block;
+		padding: 0.35em 0.75em;
+		font-size: 0.78rem;
+		color: var(--text-muted);
+		text-decoration: none;
+		border-left: 2px solid transparent;
+		transition: color 0.2s, border-color 0.2s, background-color 0.2s;
+		line-height: 1.45;
+	}
+	.toc-nav a:hover {
+		color: var(--accent);
+		background: var(--surface-2);
+		border-radius: 0 4px 4px 0;
+	}
+	.toc-nav a.active {
+		color: var(--accent);
+		border-left-color: var(--accent);
+		font-weight: 600;
+		background: var(--surface-2);
+		border-radius: 0 4px 4px 0;
+	}
+
+	/* Desktop: sticky sidebar on the RIGHT */
+	@media (min-width: 1100px) {
+		.toc-sidebar {
+			display: block;
+			position: sticky;
+			top: 5.5rem;
+			max-height: calc(100vh - 6rem);
+			overflow-y: auto;
+			padding-left: 1rem;
+			border-left: 1px solid var(--border);
+			scrollbar-width: thin;
+		}
+		.toc-nav {
+			display: block !important;
+		}
+	}
+
+	/* Mobile: collapsible above content */
+	@media (max-width: 1099px) {
+		.toc-sidebar {
+			display: block;
+			margin-bottom: 2em;
+			border: 1px solid var(--border);
+			border-radius: 8px;
+			background: var(--surface-1);
+			padding: 0;
+			overflow: hidden;
+			grid-row: 1;
+		}
+		.toc-mobile-toggle {
+			display: block;
+		}
+		.toc-mobile-toggle button {
+			display: flex;
+			align-items: center;
+			gap: 0.5em;
+			width: 100%;
+			padding: 0.75em 1em;
+			border: none;
+			background: none;
+			color: var(--text-body);
+			cursor: pointer;
+			font-size: 0.9rem;
+			font-weight: 600;
+		}
+		.toc-mobile-toggle button:hover {
+			background: var(--surface-2);
+		}
+		.toc-nav {
+			display: none;
+			padding: 0 1em 1em;
+		}
+		.toc-nav.open {
+			display: block;
+		}
+		.toc-title {
+			display: none;
+		}
+	}
+</style>
+
+<script is:inline>
+(function(){
+	// Mobile toggle
+	var toggleBtn = document.getElementById('toc-toggle');
+	var tocNav = document.getElementById('toc-nav');
+	if (toggleBtn && tocNav) {
+		toggleBtn.addEventListener('click', function(){
+			tocNav.classList.toggle('open');
+		});
+	}
+
+	// IntersectionObserver for active section
+	var tocLinks = document.querySelectorAll('.toc-nav a[data-slug]');
+	if (tocLinks.length === 0) return;
+
+	var slugs = [];
+	for (var i = 0; i < tocLinks.length; i++) {
+		slugs.push(tocLinks[i].getAttribute('data-slug'));
+	}
+
+	var headingEls = [];
+	for (var j = 0; j < slugs.length; j++) {
+		var el = document.getElementById(slugs[j]);
+		if (el) headingEls.push(el);
+	}
+
+	if (headingEls.length === 0) return;
+
+	var currentActive = null;
+
+	var observer = new IntersectionObserver(function(entries){
+		entries.forEach(function(entry){
+			if (entry.isIntersecting) {
+				var id = entry.target.id;
+				if (currentActive) currentActive.classList.remove('active');
+				var link = document.querySelector('.toc-nav a[data-slug="' + id + '"]');
+				if (link) {
+					link.classList.add('active');
+					currentActive = link;
+				}
+			}
+		});
+	}, {
+		rootMargin: '-80px 0px -70% 0px',
+		threshold: 0
+	});
+
+	for (var k = 0; k < headingEls.length; k++) {
+		observer.observe(headingEls[k]);
+	}
+})();
+</script>

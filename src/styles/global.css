@@ -1,150 +1,335 @@
+/* ============================================================
+   CSS Variable System – Light / Dark themes
+   ============================================================ */
 :root {
+	/* Accent */
 	--accent: #3b82f6;
 	--accent-dark: #1d4ed8;
-	--black: 15, 23, 42;
-	--gray: 100, 116, 139;
-	--gray-light: 226, 232, 240;
-	--gray-dark: 30, 41, 59;
-	--gray-gradient: rgba(var(--gray-light), 50%), #fff;
-	--box-shadow:
-		0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%),
-		0 16px 32px rgba(var(--gray), 33%);
+	--accent-light: #60a5fa;
+
+	/* Surfaces */
+	--surface-0: #ffffff;
+	--surface-1: #f8fafc;
+	--surface-2: #f1f5f9;
+	--surface-3: #e2e8f0;
+
+	/* Text */
+	--text-heading: #0f172a;
+	--text-body: #334155;
+	--text-muted: #64748b;
+	--text-inverse: #ffffff;
+
+	/* Borders & shadows */
+	--border: #e2e8f0;
+	--border-strong: #cbd5e1;
+	--shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+	--shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.05);
+	--shadow-lg: 0 10px 25px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.04);
+
+	/* Code */
+	--code-bg: #f1f5f9;
+	--code-text: #1e293b;
+	--pre-bg: #1e293b;
+	--pre-text: #e2e8f0;
+
+	/* Table */
+	--table-header-bg: #1e293b;
+	--table-header-text: #ffffff;
+	--table-row-alt: rgba(241,245,249,0.5);
+
+	/* Blockquote */
+	--bq-bg: rgba(59,130,246,0.05);
+	--bq-border: var(--accent);
+
+	/* Header / Footer */
+	--header-bg: #0f172a;
+	--footer-bg: #0f172a;
+
+	/* Misc */
+	--card-bg: var(--surface-0);
+	--overlay-bg: rgba(0,0,0,0.85);
 }
+
+[data-theme="dark"] {
+	--accent: #60a5fa;
+	--accent-dark: #93c5fd;
+	--accent-light: #3b82f6;
+
+	--surface-0: #1a1a1a;
+	--surface-1: #242424;
+	--surface-2: #2e2e2e;
+	--surface-3: #3a3a3a;
+
+	--text-heading: #f0f0f0;
+	--text-body: #d0d0d0;
+	--text-muted: #999999;
+	--text-inverse: #1a1a1a;
+
+	--border: #333333;
+	--border-strong: #444444;
+	--shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
+	--shadow-md: 0 4px 6px rgba(0,0,0,0.45), 0 2px 4px rgba(0,0,0,0.3);
+	--shadow-lg: 0 10px 25px rgba(0,0,0,0.5), 0 4px 10px rgba(0,0,0,0.35);
+
+	--code-bg: #242424;
+	--code-text: #e0e0e0;
+	--pre-bg: #1a1a1a;
+	--pre-text: #e0e0e0;
+
+	--table-header-bg: #2e2e2e;
+	--table-header-text: #f0f0f0;
+	--table-row-alt: rgba(50,50,50,0.3);
+
+	--bq-bg: rgba(96,165,250,0.08);
+	--bq-border: var(--accent);
+
+	--header-bg: #111111;
+	--footer-bg: #111111;
+
+	--card-bg: var(--surface-1);
+	--overlay-bg: rgba(0,0,0,0.92);
+}
+
+/* ============================================================
+   Transitions
+   ============================================================ */
+body,
+body * {
+	transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
 body {
-	font-family: var(--font-atkinson);
+	font-family: 'Inter', var(--font-atkinson), system-ui, -apple-system, sans-serif;
 	margin: 0;
 	padding: 0;
 	text-align: left;
-	background: #fff;
+	background: var(--surface-0);
 	word-wrap: break-word;
 	overflow-wrap: break-word;
-	color: rgb(var(--gray-dark));
-	font-size: 18px;
-	line-height: 1.75;
+	color: var(--text-body);
+	font-size: 17px;
+	line-height: 1.8;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
+
 main {
 	width: 860px;
 	max-width: calc(100% - 2em);
 	margin: auto;
 	padding: 3em 1em;
 }
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	margin: 1.5em 0 0.5rem 0;
-	color: rgb(var(--black));
+
+/* ============================================================
+   Typography
+   ============================================================ */
+h1, h2, h3, h4, h5, h6 {
+	margin: 2em 0 0.6rem 0;
+	color: var(--text-heading);
 	line-height: 1.3;
+	letter-spacing: -0.02em;
 }
-h1 {
-	font-size: 2.5em;
-}
+h1 { font-size: 2.25em; font-weight: 800; }
 h2 {
-	font-size: 1.875em;
-	padding-bottom: 0.3em;
-	border-bottom: 1px solid rgb(var(--gray-light));
-}
-h3 {
-	font-size: 1.5em;
-}
-h4 {
-	font-size: 1.25em;
-}
-h5 {
-	font-size: 1.1em;
-}
-strong,
-b {
+	font-size: 1.65em;
 	font-weight: 700;
+	padding-bottom: 0.35em;
+	border-bottom: 1px solid var(--border);
 }
+h3 { font-size: 1.35em; font-weight: 600; }
+h4 { font-size: 1.15em; font-weight: 600; }
+h5 { font-size: 1.05em; font-weight: 600; }
+
+strong, b { font-weight: 700; }
+
 a {
 	color: var(--accent-dark);
 	text-decoration: underline;
-	text-underline-offset: 2px;
+	text-underline-offset: 3px;
+	text-decoration-thickness: 1px;
+	transition: color 0.2s;
 }
-a:hover {
-	color: var(--accent);
-}
+a:hover { color: var(--accent); }
+
 p {
-	margin-bottom: 1em;
+	margin-bottom: 1.15em;
+	line-height: 1.8;
 }
 .prose p {
 	margin-bottom: 1.5em;
+	line-height: 1.85;
 }
-textarea {
-	width: 100%;
-	font-size: 16px;
+
+/* Lists */
+ul, ol {
+	margin-bottom: 1.25em;
+	padding-left: 1.5em;
 }
-input {
-	font-size: 16px;
+li {
+	margin-bottom: 0.35em;
+	line-height: 1.75;
 }
+
+/* ============================================================
+   Form elements
+   ============================================================ */
+textarea { width: 100%; font-size: 16px; }
+input { font-size: 16px; }
+
+/* ============================================================
+   Tables
+   ============================================================ */
 table {
 	width: 100%;
-	border-collapse: collapse;
+	border-collapse: separate;
+	border-spacing: 0;
 	margin: 1.5em 0;
-	font-size: 0.9em;
+	font-size: 0.88em;
+	border-radius: 8px;
+	overflow: hidden;
+	border: 1px solid var(--border);
 }
 table th {
-	background: rgb(var(--gray-dark));
-	color: #fff;
+	background: var(--table-header-bg);
+	color: var(--table-header-text);
 	font-weight: 600;
 	text-align: left;
 	padding: 0.75em 1em;
 }
 table td {
 	padding: 0.65em 1em;
-	border-bottom: 1px solid rgb(var(--gray-light));
+	border-bottom: 1px solid var(--border);
+}
+table tr:last-child td {
+	border-bottom: none;
 }
 table tr:nth-child(even) {
-	background: rgba(var(--gray-light), 0.3);
+	background: var(--table-row-alt);
 }
+
+/* Scrollable table wrapper (added by JS) */
+.table-wrapper {
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	margin: 1.5em 0;
+	border-radius: 8px;
+}
+.table-wrapper table {
+	margin: 0;
+}
+
+/* ============================================================
+   Images
+   ============================================================ */
 img {
 	max-width: 100%;
 	height: auto;
 	border-radius: 4px;
 }
+
+/* ============================================================
+   Code
+   ============================================================ */
 code {
 	padding: 2px 6px;
-	background-color: rgb(var(--gray-light));
-	border-radius: 3px;
-	font-size: 0.875em;
+	background-color: var(--code-bg);
+	color: var(--code-text);
+	border-radius: 4px;
+	font-size: 0.85em;
+	font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
 }
 pre {
 	padding: 1.5em;
-	border-radius: 6px;
+	border-radius: 8px;
 	overflow-x: auto;
+	background: var(--pre-bg);
+	color: var(--pre-text);
+	position: relative;
+	border: 1px solid var(--border);
+	font-size: 0.88em;
+	line-height: 1.65;
 }
 pre > code {
 	all: unset;
 }
+
+/* Copy button */
+.code-copy-btn {
+	position: absolute;
+	top: 0.5rem;
+	right: 0.5rem;
+	background: rgba(255,255,255,0.1);
+	border: 1px solid rgba(255,255,255,0.15);
+	border-radius: 6px;
+	color: rgba(255,255,255,0.6);
+	cursor: pointer;
+	padding: 0.35rem 0.45rem;
+	font-size: 0;
+	line-height: 1;
+	opacity: 0;
+	transition: opacity 0.2s, background-color 0.2s, color 0.2s;
+}
+pre:hover .code-copy-btn {
+	opacity: 1;
+}
+.code-copy-btn:hover {
+	background: rgba(255,255,255,0.2);
+	color: rgba(255,255,255,0.9);
+}
+.code-copy-btn.copied {
+	color: #4ade80;
+	opacity: 1;
+}
+
+/* ============================================================
+   Blockquotes
+   ============================================================ */
 blockquote {
-	border-left: 4px solid var(--accent);
-	padding: 0.5em 0 0.5em 1.25em;
+	border-left: 4px solid var(--bq-border);
+	padding: 0.75em 1.25em;
 	margin: 1.5em 0;
-	font-size: 1.1em;
-	color: rgb(var(--gray));
-	background: rgba(var(--gray-light), 0.25);
-	border-radius: 0 4px 4px 0;
+	font-size: 1.02em;
+	color: var(--text-muted);
+	background: var(--bq-bg);
+	border-radius: 0 8px 8px 0;
 }
 blockquote p {
 	margin: 0.5em 0;
-}
-hr {
-	border: none;
-	border-top: 1px solid rgb(var(--gray-light));
-	margin: 2.5em 0;
-}
-@media (max-width: 860px) {
-	body {
-		font-size: 16px;
-	}
-	main {
-		padding: 1em;
-	}
+	line-height: 1.7;
 }
 
+/* ============================================================
+   Horizontal Rule
+   ============================================================ */
+hr {
+	border: none;
+	border-top: 1px solid var(--border);
+	margin: 2.5em 0;
+}
+
+/* ============================================================
+   SVG Dark Mode Card
+   ============================================================ */
+[data-theme="dark"] .prose img[src$=".svg"] {
+	background: #ffffff;
+	padding: 1rem;
+	border-radius: 8px;
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 860px) {
+	body { font-size: 16px; }
+	main { padding: 1em; }
+}
+
+/* ============================================================
+   Utilities
+   ============================================================ */
 .sr-only {
 	border: 0;
 	padding: 0;

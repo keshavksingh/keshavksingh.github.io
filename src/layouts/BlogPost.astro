@@ -5,10 +5,24 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+import profilePic from '../assets/ProfilePicture.jpg';
 
-type Props = CollectionEntry<'blog'>['data'];
+interface Heading {
+	depth: number;
+	slug: string;
+	text: string;
+}
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+type Props = CollectionEntry<'blog'>['data'] & {
+	headings?: Heading[];
+};
+
+const { title, description, pubDate, updatedDate, heroImage, headings = [] } = Astro.props;
+
+// Build the LinkedIn share URL
+const pageUrl = Astro.url.href;
+const linkedInShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pageUrl)}`;
 ---
 
 <html lang="en">
@@ -27,14 +41,77 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				display: block;
 				margin: 0 auto;
 				border-radius: 12px;
-				box-shadow: var(--box-shadow);
+				box-shadow: var(--shadow-lg);
 			}
+
+			/* Three-column grid: Share | Content | ToC */
+			.post-grid {
+				display: grid;
+				grid-template-columns: 1fr;
+				max-width: 860px;
+				margin: 0 auto;
+				padding: 0 1em;
+			}
+
+			@media (min-width: 1100px) {
+				.post-grid {
+					grid-template-columns: 60px 1fr 240px;
+					max-width: 1200px;
+					gap: 2rem;
+					align-items: start;
+				}
+			}
+
+			/* Share sidebar (left) */
+			.share-sidebar {
+				display: none;
+			}
+			@media (min-width: 1100px) {
+				.share-sidebar {
+					display: block;
+					position: sticky;
+					top: 5.5rem;
+				}
+			}
+			.share-sidebar .share-label {
+				font-size: 0.7rem;
+				text-transform: uppercase;
+				letter-spacing: 0.1em;
+				color: var(--text-muted);
+				margin: 0 0 0.75rem 0;
+				font-weight: 600;
+			}
+			.share-sidebar .share-icons {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 0.6rem;
+			}
+			.share-sidebar .share-icons a {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 38px;
+				height: 38px;
+				border-radius: 8px;
+				background: var(--surface-2);
+				color: var(--text-muted);
+				text-decoration: none;
+				transition: background-color 0.2s, color 0.2s, transform 0.15s;
+			}
+			.share-sidebar .share-icons a:hover {
+				background: var(--accent);
+				color: #fff;
+				transform: scale(1.08);
+			}
+
 			.prose {
-				width: 860px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
+				max-width: 860px;
+				width: 100%;
+				padding: 1em 0;
+				color: var(--text-body);
+				font-size: 1.05rem;
+				line-height: 1.8;
 			}
 			.title {
 				margin-bottom: 1em;
@@ -47,13 +124,110 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				border: none;
 				font-size: 2.25em;
 			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
+			.author-block {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 1em;
+				margin-top: 1em;
+			}
+			.author-avatar {
+				width: 48px;
+				height: 48px;
+				border-radius: 50%;
+				object-fit: cover;
+				border: 2px solid var(--accent);
+				flex-shrink: 0;
+			}
+			.author-info {
+				display: flex;
+				flex-direction: column;
+				text-align: left;
+			}
+			.author-name {
+				font-weight: 600;
 				font-size: 0.95em;
+				color: var(--text-heading);
+			}
+			.author-date {
+				color: var(--text-muted);
+				font-size: 0.85em;
 			}
 			.last-updated-on {
 				font-style: italic;
+			}
+
+			/* Mobile share bar */
+			.share-mobile {
+				display: flex;
+				align-items: center;
+				gap: 0.75em;
+				margin-bottom: 1.5em;
+				padding: 0.75em 1em;
+				border: 1px solid var(--border);
+				border-radius: 8px;
+				background: var(--surface-1);
+			}
+			.share-mobile .share-label {
+				font-size: 0.8rem;
+				font-weight: 600;
+				color: var(--text-muted);
+				text-transform: uppercase;
+				letter-spacing: 0.06em;
+			}
+			.share-mobile a {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 34px;
+				height: 34px;
+				border-radius: 6px;
+				background: var(--surface-2);
+				color: var(--text-muted);
+				text-decoration: none;
+				transition: background-color 0.2s, color 0.2s;
+			}
+			.share-mobile a:hover {
+				background: var(--accent);
+				color: #fff;
+			}
+			@media (min-width: 1100px) {
+				.share-mobile {
+					display: none;
+				}
+			}
+
+			/* Scroll to top */
+			.scroll-top {
+				position: fixed;
+				bottom: 2rem;
+				right: 2rem;
+				z-index: 90;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 44px;
+				height: 44px;
+				border-radius: 50%;
+				border: 1px solid var(--border);
+				background: var(--surface-1);
+				color: var(--text-muted);
+				cursor: pointer;
+				box-shadow: var(--shadow-md);
+				opacity: 0;
+				visibility: hidden;
+				transform: translateY(10px);
+				transition: opacity 0.3s, visibility 0.3s, transform 0.3s, background-color 0.2s, color 0.2s;
+			}
+			.scroll-top.visible {
+				opacity: 1;
+				visibility: visible;
+				transform: translateY(0);
+			}
+			.scroll-top:hover {
+				background: var(--accent);
+				color: #fff;
+				border-color: var(--accent);
 			}
 		</style>
 		<style is:global>
@@ -71,7 +245,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				position: fixed;
 				inset: 0;
 				z-index: 9999;
-				background: rgba(0, 0, 0, 0.85);
+				background: var(--overlay-bg);
 				cursor: zoom-out;
 				justify-content: center;
 				align-items: center;
@@ -128,26 +302,76 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				<div class="hero-image">
 					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
 				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
+				<div class="title" style="max-width:860px;margin:0 auto;padding-left:1em;padding-right:1em;">
+					<h1>{title}</h1>
+					<div class="author-block">
+						<Image
+							src={profilePic}
+							alt="Keshav Singh"
+							width={96}
+							height={96}
+							class="author-avatar"
+						/>
+						<div class="author-info">
+							<span class="author-name">Keshav Singh</span>
+							<span class="author-date">
+								<FormattedDate date={pubDate} />
+								{
+									updatedDate && (
+										<span class="last-updated-on">
+											&middot; Updated <FormattedDate date={updatedDate} />
+										</span>
+									)
+								}
+							</span>
 						</div>
-						<h1>{title}</h1>
-						<hr />
 					</div>
-					<slot />
+					<hr />
+				</div>
+
+				<!-- Mobile share bar (visible < 1100px) -->
+				<div class="share-mobile" style="max-width:860px;margin:0 auto 1.5em;">
+					<span class="share-label">Share:</span>
+					<a href={linkedInShareUrl} target="_blank" rel="noopener noreferrer" title="Share on LinkedIn">
+						<svg viewBox="0 0 16 16" aria-hidden="true" width="18" height="18"><path fill="currentColor" d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/></svg>
+					</a>
+					<a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(title)}`} target="_blank" rel="noopener noreferrer" title="Share on X">
+						<svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+					</a>
+				</div>
+
+				<div class="post-grid">
+					<!-- Left: Share sidebar (desktop) -->
+					<div class="share-sidebar">
+						<p class="share-label">Share</p>
+						<div class="share-icons">
+							<a href={linkedInShareUrl} target="_blank" rel="noopener noreferrer" title="Share on LinkedIn">
+								<svg viewBox="0 0 16 16" aria-hidden="true" width="18" height="18"><path fill="currentColor" d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/></svg>
+							</a>
+							<a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(title)}`} target="_blank" rel="noopener noreferrer" title="Share on X">
+								<svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+							</a>
+						</div>
+					</div>
+
+					<!-- Center: Content -->
+					<div class="prose">
+						<slot />
+					</div>
+
+					<!-- Right: Table of Contents -->
+					<TableOfContents headings={headings} />
 				</div>
 			</article>
 		</main>
 		<Footer />
+
+		<!-- Scroll to top -->
+		<button class="scroll-top" id="scroll-top" aria-label="Scroll to top" title="Back to top">
+			<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+				<polyline points="18 15 12 9 6 15"></polyline>
+			</svg>
+		</button>
 
 		<!-- Lightbox -->
 		<div class="lightbox-overlay" id="lightbox">
@@ -158,37 +382,86 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 
 		<script is:inline>
 			document.addEventListener('DOMContentLoaded', function() {
+				// === Lightbox ===
 				var overlay = document.getElementById('lightbox');
 				var lbImg = document.getElementById('lightbox-img');
 				var lbCaption = document.getElementById('lightbox-caption');
-				if (!overlay || !lbImg || !lbCaption) return;
-
-				// Attach click to all images inside .prose
-				var imgs = document.querySelectorAll('.prose img');
-				for (var i = 0; i < imgs.length; i++) {
-					imgs[i].addEventListener('click', function() {
-						lbImg.src = this.src;
-						lbImg.alt = this.alt || '';
-						lbCaption.textContent = this.alt || '';
-						overlay.classList.add('active');
-						document.body.style.overflow = 'hidden';
+				if (overlay && lbImg && lbCaption) {
+					var imgs = document.querySelectorAll('.prose img');
+					for (var i = 0; i < imgs.length; i++) {
+						imgs[i].addEventListener('click', function() {
+							lbImg.src = this.src;
+							lbImg.alt = this.alt || '';
+							lbCaption.textContent = this.alt || '';
+							overlay.classList.add('active');
+							document.body.style.overflow = 'hidden';
+						});
+					}
+					overlay.addEventListener('click', function(e) {
+						if (e.target === lbImg) return;
+						overlay.classList.remove('active');
+						document.body.style.overflow = '';
+					});
+					document.addEventListener('keydown', function(e) {
+						if (e.key === 'Escape' && overlay.classList.contains('active')) {
+							overlay.classList.remove('active');
+							document.body.style.overflow = '';
+						}
 					});
 				}
 
-				// Close on overlay click
-				overlay.addEventListener('click', function(e) {
-					if (e.target === lbImg) return;
-					overlay.classList.remove('active');
-					document.body.style.overflow = '';
+				// === Copy button for code blocks ===
+				var pres = document.querySelectorAll('pre');
+				for (var j = 0; j < pres.length; j++) {
+					var pre = pres[j];
+					pre.style.position = 'relative';
+					var btn = document.createElement('button');
+					btn.className = 'code-copy-btn';
+					btn.setAttribute('aria-label', 'Copy code');
+					btn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+					pre.appendChild(btn);
+				}
+				document.addEventListener('click', function(e) {
+					var btn = e.target.closest('.code-copy-btn');
+					if (!btn) return;
+					var pre = btn.closest('pre');
+					var code = pre.querySelector('code');
+					var text = code ? code.textContent : pre.textContent;
+					navigator.clipboard.writeText(text).then(function(){
+						btn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+						btn.classList.add('copied');
+						setTimeout(function(){
+							btn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+							btn.classList.remove('copied');
+						}, 2000);
+					});
 				});
 
-				// Close on Escape
-				document.addEventListener('keydown', function(e) {
-					if (e.key === 'Escape' && overlay.classList.contains('active')) {
-						overlay.classList.remove('active');
-						document.body.style.overflow = '';
-					}
-				});
+				// === Wrap tables in scrollable container ===
+				var tables = document.querySelectorAll('.prose table');
+				for (var k = 0; k < tables.length; k++) {
+					var table = tables[k];
+					if (table.parentElement.classList.contains('table-wrapper')) continue;
+					var wrapper = document.createElement('div');
+					wrapper.className = 'table-wrapper';
+					table.parentNode.insertBefore(wrapper, table);
+					wrapper.appendChild(table);
+				}
+
+				// === Scroll to top ===
+				var scrollBtn = document.getElementById('scroll-top');
+				if (scrollBtn) {
+					window.addEventListener('scroll', function(){
+						if (window.scrollY > 400) {
+							scrollBtn.classList.add('visible');
+						} else {
+							scrollBtn.classList.remove('visible');
+						}
+					});
+					scrollBtn.addEventListener('click', function(){
+						window.scrollTo({ top: 0, behavior: 'smooth' });
+					});
+				}
 			});
 		</script>
 	</body>

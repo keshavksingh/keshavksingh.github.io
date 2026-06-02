@@ -6,6 +6,7 @@ import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import profilePic from '../assets/ProfilePicture.jpg';
 
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
@@ -17,9 +18,19 @@ const posts = (await getCollection('blog')).sort(
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 		<style>
+			/* Hero */
 			.hero {
-				padding: 3em 0 2em;
+				padding: 4em 1em 3em;
 				text-align: center;
+			}
+			.hero-avatar {
+				width: 140px;
+				height: 140px;
+				border-radius: 50%;
+				object-fit: cover;
+				border: 3px solid var(--accent);
+				box-shadow: 0 0 20px rgba(59,130,246,0.25), 0 0 40px rgba(59,130,246,0.1);
+				margin-bottom: 1.5em;
 			}
 			.hero h1 {
 				font-size: 2.5em;
@@ -28,50 +39,129 @@ const posts = (await getCollection('blog')).sort(
 			}
 			.hero p {
 				font-size: 1.15em;
-				color: rgb(var(--gray));
+				color: var(--text-muted);
 				max-width: 600px;
+				margin: 0 auto 2em;
+			}
+			.hero-cta {
+				display: flex;
+				justify-content: center;
+				gap: 1em;
+				flex-wrap: wrap;
+			}
+			.btn {
+				display: inline-flex;
+				align-items: center;
+				padding: 0.7em 1.5em;
+				border-radius: 8px;
+				font-size: 0.95em;
+				font-weight: 600;
+				text-decoration: none;
+				transition: background-color 0.2s, color 0.2s, box-shadow 0.2s, transform 0.15s;
+			}
+			.btn:hover {
+				transform: translateY(-1px);
+			}
+			.btn-primary {
+				background: var(--accent);
+				color: #fff;
+				border: 2px solid var(--accent);
+			}
+			.btn-primary:hover {
+				background: var(--accent-dark);
+				border-color: var(--accent-dark);
+				color: #fff;
+				box-shadow: var(--shadow-md);
+			}
+			.btn-outline {
+				background: transparent;
+				color: var(--accent);
+				border: 2px solid var(--accent);
+			}
+			.btn-outline:hover {
+				background: var(--accent);
+				color: #fff;
+				box-shadow: var(--shadow-md);
+			}
+
+			/* Posts section */
+			.posts-section {
+				max-width: 860px;
 				margin: 0 auto;
+				padding: 0 1em 3em;
 			}
 			.posts-section h2 {
 				font-size: 1.5em;
-				margin-bottom: 1em;
+				margin-bottom: 1.25em;
 			}
-			ul {
-				list-style-type: none;
+			.post-list {
+				list-style: none;
 				margin: 0;
 				padding: 0;
+				display: grid;
+				gap: 1.5em;
 			}
-			ul li {
-				margin-bottom: 1.5em;
-				padding-bottom: 1.5em;
-				border-bottom: 1px solid rgb(var(--gray-light));
+			.post-card {
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				padding: 1.5em;
+				background: var(--card-bg);
+				transition: transform 0.2s, box-shadow 0.2s;
 			}
-			ul li:last-child {
-				border-bottom: none;
+			.post-card:hover {
+				transform: translateY(-3px);
+				box-shadow: var(--shadow-lg);
 			}
-			ul li a {
+			.post-card a {
 				text-decoration: none;
 				display: block;
 			}
-			ul li a:hover .title {
-				color: var(--accent);
-			}
-			.title {
-				font-size: 1.25em;
+			.post-card .post-title {
+				font-size: 1.2em;
 				font-weight: 700;
-				color: rgb(var(--black));
-				margin: 0 0 0.25em;
+				color: var(--text-heading);
+				margin: 0 0 0.35em;
 				transition: color 0.2s;
 			}
-			.date {
-				color: rgb(var(--gray));
-				font-size: 0.875em;
-				margin: 0;
+			.post-card a:hover .post-title {
+				color: var(--accent);
 			}
-			.description {
-				color: rgb(var(--gray-dark));
-				margin: 0.5em 0 0;
+			.post-card .post-date {
+				color: var(--text-muted);
+				font-size: 0.8em;
+				text-transform: uppercase;
+				letter-spacing: 0.04em;
+				margin: 0 0 0.5em;
+			}
+			.post-card .post-desc {
+				color: var(--text-body);
+				margin: 0 0 1em;
 				font-size: 0.95em;
+				line-height: 1.6;
+			}
+			.post-card .post-tags {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.4em;
+				margin-bottom: 0.75em;
+			}
+			.tag-pill {
+				display: inline-block;
+				padding: 0.2em 0.65em;
+				background: var(--surface-2);
+				color: var(--text-muted);
+				border-radius: 999px;
+				font-size: 0.75em;
+				font-weight: 500;
+			}
+			.read-more {
+				font-size: 0.9em;
+				color: var(--accent);
+				font-weight: 600;
+				text-decoration: none;
+			}
+			.read-more:hover {
+				text-decoration: underline;
 			}
 		</style>
 	</head>
@@ -79,23 +169,42 @@ const posts = (await getCollection('blog')).sort(
 		<Header />
 		<main>
 			<div class="hero">
+				<Image
+					src={profilePic}
+					alt="Keshav Singh"
+					width={280}
+					height={280}
+					class="hero-avatar"
+				/>
 				<h1>Keshav Singh</h1>
-				<p>Engineering leadership, enterprise architecture, and AI governance.</p>
+				<p>{SITE_DESCRIPTION}</p>
+				<div class="hero-cta">
+					<a href="/blog" class="btn btn-primary">Read the Blog</a>
+					<a href="/about" class="btn btn-outline">About Me</a>
+				</div>
 			</div>
 			<section class="posts-section">
 				<h2>Recent Posts</h2>
-				<ul>
+				<ul class="post-list">
 					{
 						posts.map((post) => (
-							<li>
+							<li class="post-card">
 								<a href={`/blog/${post.id}/`}>
-									<h3 class="title">{post.data.title}</h3>
-									<p class="date">
+									<p class="post-date">
 										<FormattedDate date={post.data.pubDate} />
 									</p>
-									{post.data.description && (
-										<p class="description">{post.data.description}</p>
+									<h3 class="post-title">{post.data.title}</h3>
+									{post.data.tags && (
+										<div class="post-tags">
+											{post.data.tags.map((tag: string) => (
+												<span class="tag-pill">{tag}</span>
+											))}
+										</div>
 									)}
+									{post.data.description && (
+										<p class="post-desc">{post.data.description}</p>
+									)}
+									<span class="read-more">Read more &rarr;</span>
 								</a>
 							</li>
 						))

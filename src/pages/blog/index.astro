@@ -22,42 +22,74 @@ const posts = (await getCollection('blog')).sort(
 			h1 {
 				margin-bottom: 1em;
 			}
-			ul {
-				list-style-type: none;
+			.post-list {
+				list-style: none;
 				margin: 0;
 				padding: 0;
+				display: grid;
+				gap: 1.5em;
 			}
-			ul li {
-				margin-bottom: 1.5em;
-				padding-bottom: 1.5em;
-				border-bottom: 1px solid rgb(var(--gray-light));
+			.post-card {
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				padding: 1.5em;
+				background: var(--card-bg);
+				transition: transform 0.2s, box-shadow 0.2s;
 			}
-			ul li:last-child {
-				border-bottom: none;
+			.post-card:hover {
+				transform: translateY(-3px);
+				box-shadow: var(--shadow-lg);
 			}
-			ul li a {
+			.post-card a {
 				text-decoration: none;
 				display: block;
 			}
-			ul li a:hover .title {
-				color: var(--accent);
-			}
-			.title {
-				font-size: 1.25em;
+			.post-card .post-title {
+				font-size: 1.2em;
 				font-weight: 700;
-				color: rgb(var(--black));
-				margin: 0 0 0.25em;
+				color: var(--text-heading);
+				margin: 0 0 0.35em;
 				transition: color 0.2s;
 			}
-			.date {
-				color: rgb(var(--gray));
-				font-size: 0.875em;
-				margin: 0;
+			.post-card a:hover .post-title {
+				color: var(--accent);
 			}
-			.description {
-				color: rgb(var(--gray-dark));
-				margin: 0.5em 0 0;
+			.post-card .post-date {
+				color: var(--text-muted);
+				font-size: 0.8em;
+				text-transform: uppercase;
+				letter-spacing: 0.04em;
+				margin: 0 0 0.5em;
+			}
+			.post-card .post-desc {
+				color: var(--text-body);
+				margin: 0 0 1em;
 				font-size: 0.95em;
+				line-height: 1.6;
+			}
+			.post-card .post-tags {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.4em;
+				margin-bottom: 0.75em;
+			}
+			.tag-pill {
+				display: inline-block;
+				padding: 0.2em 0.65em;
+				background: var(--surface-2);
+				color: var(--text-muted);
+				border-radius: 999px;
+				font-size: 0.75em;
+				font-weight: 500;
+			}
+			.read-more {
+				font-size: 0.9em;
+				color: var(--accent);
+				font-weight: 600;
+				text-decoration: none;
+			}
+			.read-more:hover {
+				text-decoration: underline;
 			}
 		</style>
 	</head>
@@ -66,18 +98,26 @@ const posts = (await getCollection('blog')).sort(
 		<main>
 			<h1>Blog</h1>
 			<section>
-				<ul>
+				<ul class="post-list">
 					{
 						posts.map((post) => (
-							<li>
+							<li class="post-card">
 								<a href={`/blog/${post.id}/`}>
-									<h3 class="title">{post.data.title}</h3>
-									<p class="date">
+									<p class="post-date">
 										<FormattedDate date={post.data.pubDate} />
 									</p>
-									{post.data.description && (
-										<p class="description">{post.data.description}</p>
+									<h3 class="post-title">{post.data.title}</h3>
+									{post.data.tags && (
+										<div class="post-tags">
+											{post.data.tags.map((tag: string) => (
+												<span class="tag-pill">{tag}</span>
+											))}
+										</div>
 									)}
+									{post.data.description && (
+										<p class="post-desc">{post.data.description}</p>
+									)}
+									<span class="read-more">Read more &rarr;</span>
 								</a>
 							</li>
 						))
