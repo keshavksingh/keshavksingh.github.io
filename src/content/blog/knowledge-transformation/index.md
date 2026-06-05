@@ -37,6 +37,13 @@ The central thesis: **emerging AI regulations are implicitly demanding the exist
 
 ## The Inflection Point
 
+> _AI systems collapse the boundary between retrieval and cognition._
+>
+> _Traditional systems retrieved information — humans interpreted._
+> _Agentic systems retrieve and interpret simultaneously._
+>
+> **Governance can no longer sit statically at storage boundaries. That is the architectural shift.**
+
 For nearly two decades, enterprise data governance has revolved around a deceptively simple question:
 
 > _Can a user access a piece of data?_
