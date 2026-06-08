@@ -1,7 +1,7 @@
 ---
 title: "From RAG to Production Agents: Engineering AI Systems That Reason, Learn, and Self-Correct"
 description: "A deep technical walkthrough of building production AI agents — from a monolith ReACT pipeline to a LangGraph state machine — covering the agent harness, cognitive architecture, operationalization, and evaluation strategies for engineers moving beyond RAG."
-pubDate: "2026-06-02"
+pubDate: "2026-06-07"
 tags: ["AI Agents", "LangGraph", "ReACT", "RAG", "Evaluation", "Operationalization", "Reflection", "Reflexion"]
 ---
 
